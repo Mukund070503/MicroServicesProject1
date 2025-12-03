@@ -21,10 +21,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Build Service 1
-        run: mvn -f SERVICE1_FOLDER_NAME/pom.xml clean install -DskipTests=false
+        run: mvn -f HotelService/pom.xml clean install -DskipTests=false
 
       - name: Build Service 2
-        run: mvn -f SERVICE2_FOLDER_NAME/pom.xml clean install -DskipTests=false
+        run: mvn -f RatingService/pom.xml clean install -DskipTests=false
 
       - name: Build Service 3
-        run: mvn -f SERVICE3_FOLDER_NAME/pom.xml clean install -DskipTests=false
+        run: mvn -f UserService/pom.xml clean install -DskipTests=false
