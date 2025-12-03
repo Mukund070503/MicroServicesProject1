@@ -1,8 +1,8 @@
-name: Spring Boot CI
+name: Multi-Service Build
 
 on:
   push:
-    branches: [ "main", "develop", "feature/*" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -12,13 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-    - name: Build with Maven
-      run: mvn clean install -DskipTests=false
+      - name: Build Service 1
+        run: mvn -f SERVICE1_FOLDER_NAME/pom.xml clean install -DskipTests=false
+
+      - name: Build Service 2
+        run: mvn -f SERVICE2_FOLDER_NAME/pom.xml clean install -DskipTests=false
+
+      - name: Build Service 3
+        run: mvn -f SERVICE3_FOLDER_NAME/pom.xml clean install -DskipTests=false
