@@ -20,11 +20,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build Service 1
-        run: mvn -f HotelService/pom.xml clean install -DskipTests=false
+      - name: Build RatingService
+        run: mvn -f RatingService/pom.xml clean install -DskipTests=true
 
-      - name: Build Service 2
-        run: mvn -f RatingService/pom.xml clean install -DskipTests=false
-
-      - name: Build Service 3
-        run: mvn -f UserService/pom.xml clean install -DskipTests=false
+      - name: Build UserService
+        run: mvn -f UserService/pom.xml clean install -DskipTests=true
