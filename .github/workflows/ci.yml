@@ -19,9 +19,3 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Build RatingService
-        run: mvn -f RatingService/pom.xml clean install -DskipTests=true
-
-      - name: Build UserService
-        run: mvn -f UserService/pom.xml clean install -DskipTests=true
