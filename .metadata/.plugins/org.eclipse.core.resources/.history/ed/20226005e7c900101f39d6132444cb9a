@@ -1,0 +1,16 @@
+package com.project.PatientService.controllers;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.PatientService.service.PatientService;
+
+@RestController
+@RequestMapping("/patients")
+public class PatientController {
+
+	private PatientService patientService;
+	
+	@GetMapping
+}

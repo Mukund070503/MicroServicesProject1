@@ -1,0 +1,47 @@
+package com.project.PatientService.config;
+
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+
+@Configuration
+@EnableJpaRepositories(
+        basePackages = "com.project.PatientService.repository.patient",
+        entityManagerFactoryRef = "primaryEntityManagerFactory",
+        transactionManagerRef = "primaryTransactionManager"
+)
+public class PatientDbConfig {
+
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource.primary")
+    public DataSourceProperties primaryDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean(name = "primaryDataSource")
+    public DataSource primaryDataSource() {
+        return primaryDataSourceProperties().initializeDataSourceBuilder().build();
+    }
+
+    @Bean(name = "primaryEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean primaryEntityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setDataSource(primaryDataSource());
+        factory.setPackagesToScan("com.project.PatientService.entities.patient");
+        factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        return factory;
+    }
+
+    @Bean(name = "primaryTransactionManager")
+    public JpaTransactionManager primaryTransactionManager(
+            @Qualifier("primaryEntityManagerFactory") LocalContainerEntityManagerFactoryBean factory) {
+        return new JpaTransactionManager(factory.getObject());
+    }
+}

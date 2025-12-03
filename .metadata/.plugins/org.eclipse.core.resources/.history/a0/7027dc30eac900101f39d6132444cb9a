@@ -1,0 +1,5 @@
+package com.project.PatientService.config;
+
+public class PatientDbConfig {
+
+}

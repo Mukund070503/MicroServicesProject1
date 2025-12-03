@@ -1,0 +1,11 @@
+package com.project.PatientService.service;
+import java.util.List;
+
+import com.project.PatientService.DTO.AppointmentDTO;
+public interface AppointmentService {
+
+	List<AppointmentDTO> getAllAppointment();
+	List<AppointmentDTO> getAppointmentByDoctorId(int doctorId);
+	List<AppointmentDTO> getAppointmentByPatientId(int patientId);
+	AppointmentDTO getAppointmentById(int appointmentId);
+}

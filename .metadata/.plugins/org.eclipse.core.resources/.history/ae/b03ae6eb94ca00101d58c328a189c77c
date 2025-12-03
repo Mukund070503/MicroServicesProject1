@@ -1,0 +1,157 @@
+package com.project.VisitService.service;
+
+import com.project.VisitService.dto.*;
+import com.project.VisitService.model.Consultation;
+import com.project.VisitService.model.Prescription;
+import com.project.VisitService.model.Visit;
+import com.project.VisitService.repository.ConsultationRepository;
+import com.project.VisitService.repository.PrescriptionRepository;
+import com.project.VisitService.repository.VisitRepository;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class VisitServiceImpl implements VisitService {
+
+    private final VisitRepository visitRepository;
+    private final ConsultationRepository consultationRepository;
+    private final PrescriptionRepository prescriptionRepository;
+
+    // ---------------------------
+    // BOOK VISIT (NO DISCOUNT)
+    // ---------------------------
+    @Override
+    @Transactional
+    public BookVisitResponse bookVisit(BookVisitRequest request) {
+
+        Visit visit = Visit.builder()
+                .doctorId(request.getDoctorId())
+                .patientId(request.getPatientId())
+                .scheduledTime(request.getScheduledTime())
+                .status(Visit.VisitStatus.SCHEDULED)
+                .build();
+
+        Visit saved = visitRepository.save(visit);
+
+        return BookVisitResponse.builder()
+                .visitId(saved.getVisitId())
+                .message("Visit booked successfully")
+                .build();
+    }
+
+    // ---------------------------
+    // Get upcoming doctor visits
+    // ---------------------------
+    @Override
+    public List<VisitHistoryDTO> getUpcomingVisitsForDoctor(Long doctorId) {
+        var visits = visitRepository.findByDoctorIdAndStatusOrderByScheduledTimeAsc(
+                doctorId, Visit.VisitStatus.SCHEDULED
+        );
+
+        return visits.stream().map(v ->
+                VisitHistoryDTO.builder()
+                        .visitId(v.getVisitId())
+                        .doctorId(v.getDoctorId())
+                        .status(v.getStatus().name())
+                        .scheduledTime(v.getScheduledTime())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
+    // ---------------------------
+    // Update visit status
+    // ---------------------------
+    @Override
+    @Transactional
+    public void updateVisitStatus(Long visitId, String status) {
+        var visit = visitRepository.findById(visitId)
+                .orElseThrow(() -> new RuntimeException("Visit not found"));
+
+        visit.setStatus(Visit.VisitStatus.valueOf(status.toUpperCase()));
+        visitRepository.save(visit);
+    }
+
+    // ---------------------------
+    // Visit history for patient
+    // ---------------------------
+    @Override
+    public List<VisitHistoryDTO> getVisitHistoryForPatient(Long patientId) {
+        var visits = visitRepository.findByPatientIdOrderByScheduledTimeDesc(patientId);
+
+        return visits.stream().map(v -> VisitHistoryDTO.builder()
+                .visitId(v.getVisitId())
+                .doctorId(v.getDoctorId())
+                .status(v.getStatus().name())
+                .scheduledTime(v.getScheduledTime())
+                .consultationId(
+                        consultationRepository.findByVisitId(v.getVisitId())
+                                .map(Consultation::getConsultationId).orElse(null)
+                )
+                .prescriptionId(
+                        prescriptionRepository.findTopByVisitIdOrderByCreatedAtDesc(v.getVisitId())
+                                .map(Prescription::getPrescriptionId).orElse(null)
+                )
+                .build()
+        ).collect(Collectors.toList());
+    }
+
+    // ---------------------------
+    // Visit details
+    // ---------------------------
+    @Override
+    public VisitDetailsDTO getVisitDetails(Long visitId) {
+        var visit = visitRepository.findById(visitId)
+                .orElseThrow(() -> new RuntimeException("Visit not found"));
+
+        var cons = consultationRepository.findByVisitId(visitId);
+        var pres = prescriptionRepository.findTopByVisitIdOrderByCreatedAtDesc(visitId);
+
+        VisitDetailsDTO dto = VisitDetailsDTO.builder()
+                .visitId(visit.getVisitId())
+                .doctorId(visit.getDoctorId())
+                .patientId(visit.getPatientId())
+                .scheduledTime(visit.getScheduledTime())
+                .status(visit.getStatus().name())
+                .build();
+
+        cons.ifPresent(c -> {
+            dto.setConsultationId(c.getConsultationId());
+            dto.setNotes(c.getNotes());
+            dto.setConsultationTime(c.getCreatedAt());
+            dto.setFollowUpDate(c.getFollowUpDate() == null ? null : c.getFollowUpDate().toString());
+        });
+
+        pres.ifPresent(p -> dto.setPrescriptionId(p.getPrescriptionId()));
+
+        return dto;
+    }
+
+    // ---------------------------
+    // Last Visit Summary
+    // ---------------------------
+    @Override
+    public LastVisitSummaryDTO getLastVisitSummaryForPatient(Long patientId) {
+
+        var visits = visitRepository.findByPatientIdOrderByScheduledTimeDesc(patientId);
+
+        if (visits.isEmpty()) return null;
+
+        var last = visits.get(0);
+
+        var cons = consultationRepository.findByVisitId(last.getVisitId());
+        var pres = prescriptionRepository.findTopByVisitIdOrderByCreatedAtDesc(last.getVisitId());
+
+        return LastVisitSummaryDTO.builder()
+                .lastVisitId(last.getVisitId())
+                .lastConsultationId(cons.map(Consultation::getConsultationId).orElse(null))
+                .lastConsultationTime(cons.map(Consultation::getCreatedAt).orElse(null))
+                .lastPrescriptionId(pres.map(Prescription::getPrescriptionId).orElse(null))
+                .build();
+    }
+}

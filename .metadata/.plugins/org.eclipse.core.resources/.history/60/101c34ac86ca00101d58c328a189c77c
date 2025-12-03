@@ -1,0 +1,22 @@
+package com.project.PatientService.DTO;
+
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+public class AppointmentDTO {
+
+    private int appointmentId;
+    private int patientId;
+    private int doctorId;
+    private String specialization;
+    private String appointmentDetails;
+    private String lastPrescriptionUrl;
+    private String status;
+    private LocalDateTime createdOn;
+    private LocalDateTime scheduledFor;
+}

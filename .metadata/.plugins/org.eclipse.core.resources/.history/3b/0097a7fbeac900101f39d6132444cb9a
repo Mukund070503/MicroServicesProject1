@@ -1,0 +1,5 @@
+package com.project.PatientService.service;
+
+public interface AppointmentService {
+
+}

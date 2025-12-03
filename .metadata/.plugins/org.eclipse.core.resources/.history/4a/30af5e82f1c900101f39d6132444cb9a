@@ -1,0 +1,47 @@
+package com.project.PatientService.config;
+
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+
+@Configuration
+@EnableJpaRepositories(
+        basePackages = "com.project.PatientService.repository.visit",
+        entityManagerFactoryRef = "secondaryEntityManagerFactory",
+        transactionManagerRef = "secondaryTransactionManager"
+)
+public class AppointmentDbConfig {
+
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource.secondary")
+    public DataSourceProperties secondaryDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean(name = "secondaryDataSource")
+    public DataSource secondaryDataSource() {
+        return secondaryDataSourceProperties().initializeDataSourceBuilder().build();
+    }
+
+    @Bean(name = "secondaryEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setDataSource(secondaryDataSource());
+        factory.setPackagesToScan("com.project.PatientService.entities.appointment");
+        factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        return factory;
+    }
+
+    @Bean(name = "secondaryTransactionManager")
+    public JpaTransactionManager secondaryTransactionManager(
+            @Qualifier("secondaryEntityManagerFactory") LocalContainerEntityManagerFactoryBean factory) {
+        return new JpaTransactionManager(factory.getObject());
+    }
+}

@@ -1,0 +1,5 @@
+package com.Icwd.user.service.external.service;
+
+public interface HotelService {
+
+}

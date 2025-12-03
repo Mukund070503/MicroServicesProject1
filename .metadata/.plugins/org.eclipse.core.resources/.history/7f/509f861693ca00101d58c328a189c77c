@@ -1,0 +1,5 @@
+package com.project.VisitService.dto;
+
+public class VisitDetailsDTO {
+
+}

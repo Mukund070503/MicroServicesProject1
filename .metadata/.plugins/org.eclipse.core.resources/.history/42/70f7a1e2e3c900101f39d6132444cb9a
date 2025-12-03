@@ -1,0 +1,5 @@
+package com.project.PatientService.repositories;
+
+public interface AppointmentRepository {
+
+}

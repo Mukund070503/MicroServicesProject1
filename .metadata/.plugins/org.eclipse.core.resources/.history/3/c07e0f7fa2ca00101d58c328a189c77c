@@ -1,0 +1,5 @@
+package com.project.PatientService.DTO;
+
+public class DoctorDTO {
+
+}

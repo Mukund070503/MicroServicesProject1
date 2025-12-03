@@ -1,0 +1,26 @@
+package com.project.PatientService.client;
+
+@Component
+@RequiredArgsConstructor
+public class DoctorServiceClient {
+
+    private final WebClient doctorWebClient;
+
+    public List<DoctorDTO> getAllDoctors() {
+        return doctorWebClient.get()
+            .uri("/manage/all")
+            .retrieve()
+            .bodyToFlux(DoctorDTO.class)
+            .collectList()
+            .block();
+    }
+
+    public List<AvailabilityDTO> getAvailability(Long doctorId) {
+        return doctorWebClient.get()
+            .uri("/availability/{doctorId}", doctorId)
+            .retrieve()
+            .bodyToFlux(AvailabilityDTO.class)
+            .collectList()
+            .block();
+    }
+}

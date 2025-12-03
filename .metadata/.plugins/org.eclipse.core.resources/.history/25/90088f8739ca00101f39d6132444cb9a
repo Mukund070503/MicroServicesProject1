@@ -1,0 +1,57 @@
+spring.application.name=PatientService
+server.port = 8081
+spring.datasource.primary.url=jdbc:mysql://localhost:3306/patient_db
+spring.datasource.primary.username=root
+spring.datasource.primary.password=Encora@12345
+spring.datasource.primary.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.datasource.secondary.url=jdbc:mysql://localhost:3306/visit_db
+spring.datasource.secondary.username=root
+spring.datasource.secondary.password=Encora@12345
+spring.datasource.secondary.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.application.name=PatientService
+server.port=8081
+
+# -----------------------------
+# Single PostgreSQL datasource
+# -----------------------------
+spring.datasource.url=jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require
+spring.datasource.username=postgres.clpaasikckeoplfbqunc
+spring.datasource.password=Pune@Encora45
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# HikariCP tuning (recommended for microservices + Supabase)
+spring.datasource.hikari.maximum-pool-size=5
+spring.datasource.hikari.minimum-idle=2
+spring.datasource.hikari.idle-timeout=30000
+spring.datasource.hikari.connection-timeout=20000
+spring.datasource.hikari.max-lifetime=1800000
+spring.datasource.hikari.data-source-properties.prepareThreshold=0
+
+# ----------------------------------------
+# JPA / Hibernate Configuration (Postgres)
+# ----------------------------------------
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+# Default schema for patient tables
+spring.jpa.properties.hibernate.default_schema=patient_schema
+
+# -------------------------
+# Eureka (if you use it)
+# -------------------------
+eureka.client.register-with-eureka=true
+eureka.client.fetch-registry=true
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+eureka.instance.prefer-ip-address=true
+
+spring.jpa.hibernate.ddl-auto= update
+spring.jpa.show-sql = true
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+
+eureka.client.register-with-eureka=true
+eureka.client.fetch-registry=true
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+eureka.instance.prefer-ip-address = true

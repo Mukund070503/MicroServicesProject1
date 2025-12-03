@@ -1,0 +1,5 @@
+package com.Icwd.rating.entities;
+
+public class Rating {
+
+}

@@ -1,0 +1,103 @@
+package com.project.PatientService.service;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.project.PatientService.DTO.AppointmentCreateDTO;
+import com.project.PatientService.DTO.AppointmentDTO;
+import com.project.PatientService.DTO.AppointmentUpdateDTO;
+import com.project.PatientService.entities.Appointment;
+import com.project.PatientService.repositories.appointment.AppointmentRepository;
+
+@Service
+public class AppointmentServiceImpl implements AppointmentService{
+	
+	@Autowired
+	private AppointmentRepository appointmentRepository;
+	
+	@Override
+	public List<AppointmentDTO> getAllAppointment() {
+		
+		return appointmentRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+	}
+
+	@Override
+    public AppointmentDTO createAppointment(AppointmentCreateDTO dto) {
+
+        Appointment appointment = Appointment.builder()
+                .patientId(dto.getPatientId())
+                .doctorId(dto.getDoctorId())
+                .specialization(dto.getSpecialization())
+                .status("PENDING")
+                .scheduledFor(dto.getScheduledFor())
+                .lastPrescriptionUrl(dto.getLastPrescriptionUrl())
+                .build();
+
+        Appointment saved = appointmentRepository.save(appointment);
+
+        return convertToDTO(saved);
+    }
+
+	@Override
+    public AppointmentDTO updateAppointment(int id, AppointmentUpdateDTO dto) {
+
+        Appointment appt = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        if (dto.getAppointmentDetails() != null)
+            appt.setAppointmentDetails(dto.getAppointmentDetails());
+
+        if (dto.getStatus() != null)
+            appt.setStatus(dto.getStatus());
+
+        Appointment updated = appointmentRepository.save(appt);
+
+        return convertToDTO(updated);
+    }
+	
+	@Override
+	public List<AppointmentDTO> getAppointmentByDoctorId(int doctorId) {
+		// TODO Auto-generated method stub
+		return appointmentRepository.findByDoctorId(doctorId)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+	}
+
+	@Override
+	public List<AppointmentDTO> getAppointmentByPatientId(int patientId) {
+		// TODO Auto-generated method stub
+		return appointmentRepository.findByPatientId(patientId)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+	}
+
+	@Override
+	public AppointmentDTO getAppointmentById(int appointmentId) {
+		// TODO Auto-generated method stub
+		Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found with ID: " + appointmentId));
+
+        return convertToDTO(appointment);
+	}
+
+	private AppointmentDTO convertToDTO(Appointment appointment) {
+        return new AppointmentDTO(
+                appointment.getAppointmentId(),
+                appointment.getPatientId(),
+                appointment.getDoctorId(),
+                appointment.getSpecialization(),
+                appointment.getAppointmentDetails(),
+                appointment.getLastPrescriptionUrl(),
+                appointment.getStatus(),
+                appointment.getCreatedOn(),
+                appointment.getScheduledFor()
+        );
+    }
+}

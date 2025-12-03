@@ -1,0 +1,38 @@
+package com.project.PatientService.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.project.PatientService.DTO.AppointmentDTO;
+import com.project.PatientService.service.AppointmentService;
+
+@RestController
+@RequestMapping("/appointments")
+public class AppointmentController {
+
+    @Autowired
+    private AppointmentService appointmentService;
+
+    @GetMapping
+    public ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
+        return ResponseEntity.ok(appointmentService.getAllAppointment());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AppointmentDTO> getById(@PathVariable int id) {
+        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
+    }
+
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<AppointmentDTO>> getByDoctorId(@PathVariable int doctorId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentByDoctorId(doctorId));
+    }
+
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<List<AppointmentDTO>> getByPatient(@PathVariable int patientId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentByPatientId(patientId));
+    }
+}

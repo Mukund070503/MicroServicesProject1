@@ -1,0 +1,45 @@
+package com.project.PatientService.entities;
+
+import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import jakarta.persistence.*;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name="appointments")
+public class Appointment {
+
+    @Id
+    private int appointmentId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
+    
+    @Column(nullable = false)
+    private int doctorId;
+
+    @Column(nullable = false)
+    private String specialization;
+
+    private String appointmentDetails;
+
+    private String lastPrescription;
+
+    @Column(nullable = false)
+    private String status;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdOn;
+
+    @Column(nullable = false)
+    private LocalDateTime scheduledFor;
+
+
+}
+

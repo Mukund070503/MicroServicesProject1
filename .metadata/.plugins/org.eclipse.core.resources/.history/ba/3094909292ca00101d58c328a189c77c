@@ -1,0 +1,5 @@
+package com.project.VisitService.model;
+
+public class Prescription {
+
+}
