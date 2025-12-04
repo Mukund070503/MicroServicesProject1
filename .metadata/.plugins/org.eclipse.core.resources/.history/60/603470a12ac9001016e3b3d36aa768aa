@@ -1,7 +1,0 @@
-package com.Icwd.rating.services.impl;
-
-import com.Icwd.rating.services.RatingService;
-
-public class RatingServiceImpl implements RatingService{
-
-}

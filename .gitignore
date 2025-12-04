@@ -21,3 +21,4 @@ target/
 
 # Env files (if any)
 .env
+/.metadata/

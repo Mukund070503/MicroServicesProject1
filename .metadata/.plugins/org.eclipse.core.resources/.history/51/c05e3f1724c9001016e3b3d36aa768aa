@@ -1,5 +1,0 @@
-package com.Icwd.hotel.services;
-
-public interface HotelService {
-
-}

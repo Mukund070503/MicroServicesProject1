@@ -1,5 +1,0 @@
-package com.Icwd.hotel.repositories;
-
-public interface HotelRepository {
-
-}

@@ -1,5 +1,0 @@
-package com.Icwd.user.service.services;
-
-public interface UserService {
-
-}

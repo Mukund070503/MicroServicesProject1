@@ -1,5 +1,0 @@
-package com.Icwd.hotel.exceptions;
-
-public class ResourceNotFoundException {
-
-}
