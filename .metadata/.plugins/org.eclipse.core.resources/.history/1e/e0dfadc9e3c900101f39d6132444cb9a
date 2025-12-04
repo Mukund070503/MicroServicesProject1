@@ -1,6 +1,0 @@
-package com.project.PatientService.repositories;
-import com.project.PatientService.entities;
-
-public interface PatientRepository extends JpaRepository<Patient, Integer>{
-
-}

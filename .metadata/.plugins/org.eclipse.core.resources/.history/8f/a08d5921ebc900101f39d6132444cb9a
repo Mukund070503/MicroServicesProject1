@@ -1,9 +1,0 @@
-package com.project.PatientService.service;
-import com.project.PatientService.DTO;
-public interface AppointmentService {
-
-	List<AppointmentDTO> getAllAppointment();
-	List<AppointmentDTO> getAppointmentByDoctorId(int doctorId);
-	List<AppointmentDTO> getAppointmentByPatientId(int patientId);
-	AppointmentDTO getAppointmentById(int appointmentId);
-}

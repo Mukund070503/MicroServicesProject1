@@ -1,5 +1,0 @@
-package com.project.PatientService.client;
-
-public class VisitServiceClient {
-
-}
