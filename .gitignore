@@ -9,6 +9,7 @@ target/
 .project
 .classpath
 .settings/
+bin/
 
 # VS Code files
 .vscode/
@@ -21,4 +22,6 @@ target/
 
 # Env files (if any)
 .env
-/.metadata/
+
+# Eclipse workspace metadata (NEVER commit)
+.metadata/
